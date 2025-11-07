@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AmbuQuick - Emergency Ambulance Booking System</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-blue": "#007BFF",
+                        "emergency-red": "#E63946",
+                        "success-green": "#2ECC71",
+                        "neutral-gray": "#F5F5F5",
+                        "background-dark": "#121212",
+                        "text-dark": "#1C1C1E",
+                        "text-gray": "#8A8A8E",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "Poppins", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(230, 57, 70, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 15px rgba(230, 57, 70, 0.4); }
+            to { box-shadow: 0 0 25px rgba(230, 57, 70, 0.6); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 50px rgba(230, 57, 70, 0); }
+        }
+
+        .pulsing-glow {
+            animation: pulse 2s infinite;
+        }
+
+        .progress-ring__circle {
+            stroke-dasharray: 628;
+            stroke-dashoffset: 628;
+            transition: stroke-dashoffset 1s linear;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Chatbot styles */
+        .chat-hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chat-visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="font-sans bg-neutral-gray dark:bg-background-dark">
+    <div id="app">
+        <!-- Screen 1: Landing/Home -->
+        <div id="homeScreen" class="screen active">
+            <div class="relative flex h-screen min-h-[600px] w-full flex-col overflow-hidden">
+                <!-- Header -->
+                <header class="absolute top-0 left-0 right-0 z-20 p-4 md:p-6 lg:p-8">
+                    <div class="container mx-auto flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-emergency-red text-2xl md:text-3xl">emergency</span>
+                            <span class="text-xl md:text-2xl font-bold text-text-dark dark:text-white">AmbuQuick</span>
+                        </div>
+                        <nav>
+                            <button class="text-text-dark dark:text-white hover:text-primary-blue transition-colors px-3 py-2 rounded-lg text-sm font-bold">Login</button>
+                        </nav>
+                    </div>
+                </header>
+
+                <!-- Background Map -->
+                <div class="absolute inset-0 z-0">
+                    <div class="h-full w-full bg-cover bg-center" 
+                         style='background-image: linear-gradient(to top, rgba(245, 245, 245, 1) 10%, rgba(245, 245, 245, 0) 60%), url("https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&q=80");'>
+                    </div>
+                    <div class="absolute inset-0 z-0 dark:bg-background-dark/80"></div>
+                </div>
+
+                <!-- Main Content -->
+                <main class="relative z-10 flex flex-col flex-grow items-center justify-end h-full p-4 md:p-6 lg:p-8">
+                    <div class="flex flex-col items-center justify-center text-center w-full max-w-lg pb-16 md:pb-20 fade-in">
+                        <div class="mb-8 md:mb-12">
+                            <h1 class="text-5xl md:text-6xl font-black leading-tight tracking-tight text-text-dark dark:text-white">AmbuQuick</h1>
+                            <h2 class="text-lg md:text-xl font-semibold leading-normal text-text-gray dark:text-neutral-gray/70 mt-3">Emergency Response, Simplified.</h2>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4 w-full">
+                            <button onclick="navigateTo('bookingScreen')" 
+                                   class="flex-1 flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-16 px-6 bg-primary-blue text-white text-base font-bold transition-all transform hover:scale-105 shadow-lg">
+                                <span class="material-symbols-outlined">add_box</span>
+                                <span class="truncate">BOOK AMBULANCE</span>
+                            </button>
+                            <button onclick="navigateTo('sosScreen')" 
+                                   class="flex-1 flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-16 px-6 bg-emergency-red text-white text-base font-bold glow-effect transition-all transform hover:scale-105">
+                                <span class="material-symbols-outlined">sos</span>
+                                <span class="truncate">SOS</span>
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Screen 2: Booking Form -->
+        <div id="bookingScreen" class="screen">
+            <div class="relative flex min-h-screen w-full flex-col">
+                <header class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 sm:px-8 md:px-16 py-4 bg-white dark:bg-background-dark sticky top-0 z-50 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-emergency-red text-3xl">emergency</span>
+                        <h2 class="text-xl font-bold text-text-dark dark:text-white">AmbuQuick</h2>
+                    </div>
+                    <button onclick="navigateTo('homeScreen')" class="text-text-dark dark:text-gray-300 text-sm font-semibold hover:text-primary-blue">Home</button>
+                </header>
+
+                <main class="flex-1 px-4 sm:px-8 md:px-16 lg:px-24 py-8">
+                    <div class="max-w-4xl mx-auto fade-in">
+                        <h1 class="text-4xl font-black text-text-dark dark:text-white mb-8">Book an Ambulance</h1>
+                        
+                        <div class="bg-white dark:bg-gray-900 p-8 rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg space-y-6">
+                            <div>
+                                <label class="block text-text-gray dark:text-gray-400 text-sm font-semibold mb-2">Full Name</label>
+                                <input id="bookingName" class="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-neutral-gray dark:bg-gray-800 text-text-dark dark:text-white h-12 px-4" value="Jane Doe"/>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-text-gray dark:text-gray-400 text-sm font-semibold mb-2">Contact Number</label>
+                                <input id="bookingPhone" class="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-neutral-gray dark:bg-gray-800 text-text-dark dark:text-white h-12 px-4" value="+1 (555) 123-4567"/>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-text-gray dark:text-gray-400 text-sm font-semibold mb-2">Pick-up Location</label>
+                                <input id="bookingLocation" class="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-neutral-gray dark:bg-gray-800 text-text-dark dark:text-white h-12 px-4" value="123 Maple Street, Springfield"/>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button onclick="navigateTo('homeScreen')" class="flex-1 h-12 px-6 bg-gray-200 dark:bg-gray-800 text-text-dark dark:text-white rounded-lg font-bold hover:bg-gray-300 transition-colors">Back</button>
+                                <button onclick="navigateTo('confirmScreen')" class="flex-1 h-12 px-6 bg-primary-blue text-white rounded-lg font-bold hover:bg-blue-600 transition-colors shadow-lg">Confirm Booking</button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Screen 3: Confirmation -->
+        <div id="confirmScreen" class="screen">
+            <div class="flex min-h-screen items-center justify-center p-4">
+                <div class="max-w-[500px] w-full fade-in">
+                    <div class="text-center mb-8">
+                        <span class="material-symbols-outlined text-success-green animate-bounce" style="font-size: 64px;">check_circle</span>
+                        <h1 class="text-4xl font-black text-text-dark dark:text-white mt-4">Ambulance Confirmed!</h1>
+                        <p class="text-text-gray dark:text-gray-400 text-lg mt-2">Help is on the way</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-xl p-6 space-y-4">
+                        <div class="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-800">
+                            <div>
+                                <p class="text-text-gray text-sm uppercase">Status</p>
+                                <p class="text-text-dark dark:text-white text-xl font-bold">En Route</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-text-gray text-sm uppercase">ETA</p>
+                                <p class="text-primary-blue text-2xl font-black">8 min</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary-blue to-blue-600 flex items-center justify-center shadow-lg">
+                                    <span class="material-symbols-outlined text-white text-3xl">person</span>
+                                </div>
+                                <div>
+                                    <p class="text-text-dark dark:text-white text-lg font-bold">Rajesh Kumar</p>
+                                    <p class="text-text-gray text-sm">Driver • 4.9 ⭐</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-emergency-red to-red-600 flex items-center justify-center shadow-lg">
+                                    <span class="material-symbols-outlined text-white text-3xl">ambulance</span>
+                                </div>
+                                <div>
+                                    <p class="text-text-dark dark:text-white text-lg font-bold">Force Traveller (AC)</p>
+                                    <p class="text-text-gray text-sm">DL-01-AB-1234</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex gap-4">
+                        <button class="flex-1 h-14 px-6 bg-primary-blue text-white rounded-lg font-bold hover:bg-blue-600 transition-colors shadow-lg">View Map</button>
+                        <button onclick="navigateTo('homeScreen')" class="flex-1 h-14 px-6 bg-gray-200 dark:bg-gray-800 text-text-dark dark:text-white rounded-lg font-bold hover:bg-gray-300 transition-colors">Home</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: SOS Activation -->
+        <div id="sosScreen" class="screen">
+            <div class="relative flex h-screen w-full flex-col overflow-hidden bg-gradient-to-br from-red-950 via-background-dark to-black">
+                <div class="relative z-10 flex-1 flex justify-center items-center px-4 py-8">
+                    <div class="max-w-md w-full flex flex-col items-center fade-in">
+                        <div class="text-center mb-8">
+                            <h1 class="text-white text-5xl font-black mb-4">🚨 SOS ACTIVATED</h1>
+                            <p class="text-white/80 text-lg font-semibold">Sending emergency signal in...</p>
+                        </div>
+
+                        <div class="relative flex items-center justify-center w-72 h-72 my-8">
+                            <svg class="absolute w-full h-full -rotate-90" viewBox="0 0 220 220">
+                                <circle class="text-emergency-red/10" cx="110" cy="110" fill="transparent" r="100" stroke="currentColor" stroke-width="8"></circle>
+                                <circle id="sosProgressRing" class="progress-ring__circle text-emergency-red" cx="110" cy="110" fill="transparent" r="100" stroke="currentColor" stroke-width="8"></circle>
+                            </svg>
+                            
+                            <div class="flex items-center justify-center w-60 h-60 rounded-full bg-gradient-to-br from-emergency-red/30 to-emergency-red/10 pulsing-glow border-4 border-emergency-red/50">
+                                <div class="text-center">
+                                    <span id="sosCountdown" class="text-white text-9xl font-black">10</span>
+                                    <p class="text-white/70 text-sm font-bold uppercase tracking-widest mt-2">Seconds</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-full px-4 space-y-4">
+                            <button id="cancelSOS" class="w-full h-14 px-6 bg-transparent border-2 border-emergency-red text-white rounded-lg font-bold hover:bg-emergency-red/20 transition-all">
+                                CANCEL SOS
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: SOS Confirmation -->
+        <div id="sosConfirmScreen" class="screen">
+            <div class="flex min-h-screen items-center justify-center p-4 bg-gradient-to-b from-red-50 via-white to-green-50">
+                <div class="max-w-2xl w-full fade-in">
+                    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                        <div class="p-12 text-center">
+                            <div class="mb-6">
+                                <div class="w-24 h-24 bg-success-green/10 rounded-full flex items-center justify-center mx-auto">
+                                    <span class="material-symbols-outlined text-success-green" style="font-size: 64px;">check_circle</span>
+                                </div>
+                            </div>
+                            
+                            <h1 class="text-5xl font-black text-text-dark mb-4">
+                                <span class="text-success-green">✓</span> Help is on the way
+                            </h1>
+                            <p class="text-lg text-text-gray mb-8">
+                                Your location has been shared with the nearest emergency response team.
+                            </p>
+
+                            <div class="flex items-center justify-center gap-4 my-8">
+                                <div class="w-14 h-14 rounded-full bg-emergency-red/10 flex items-center justify-center border-2 border-emergency-red">
+                                    <span class="material-symbols-outlined text-emergency-red text-3xl">emergency</span>
+                                </div>
+                                <div class="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-success-green w-4/5"></div>
+                                </div>
+                                <div class="w-14 h-14 rounded-full bg-success-green/10 flex items-center justify-center border-2 border-success-green">
+                                    <span class="material-symbols-outlined text-success-green text-3xl">pin_drop</span>
+                                </div>
+                            </div>
+
+                            <h2 class="text-4xl font-black text-success-green mb-8">Estimated arrival: 3 minutes</h2>
+
+                            <button onclick="navigateTo('homeScreen')" class="w-full max-w-xs h-14 px-6 bg-emergency-red text-white rounded-lg font-bold hover:bg-red-600 transition-colors shadow-lg mx-auto block">
+                                Back to Home
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Chatbot -->
+    <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex flex-col items-end gap-4">
+        <div id="chatWindow" class="chat-hidden transition-all duration-300 flex flex-col w-80 sm:w-96 h-[500px] bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-primary-blue to-blue-600 text-white">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                        <span class="material-symbols-outlined">support_agent</span>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold">AmbuQuick Assistant</h2>
+                        <p class="text-xs opacity-90">Always here to help</p>
+                    </div>
+                </div>
+                <button id="closeChat" class="p-2 hover:bg-white/10 rounded-full">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-800/50">
+                <div class="flex items-end gap-2">
+                    <div class="w-8 h-8 rounded-full bg-primary-blue flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white text-lg">smart_toy</span>
+                    </div>
+                    <div class="max-w-[260px] rounded-2xl rounded-bl-sm px-4 py-3 bg-white dark:bg-gray-700 shadow-sm">
+                        <p class="text-sm text-text-dark dark:text-white">👋 Welcome! How can I help you today?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+                <form id="chatForm" class="relative flex items-center gap-2">
+                    <input id="messageInput" class="flex-1 pl-4 pr-12 py-3 text-sm bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full focus:ring-2 focus:ring-primary-blue/50 focus:outline-none" placeholder="Type message..." type="text"/>
+                    <button type="submit" class="absolute right-2 w-9 h-9 rounded-full bg-primary-blue text-white hover:bg-blue-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-xl">send</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <button id="chatToggle" class="relative flex items-center justify-center rounded-full h-16 w-16 bg-primary-blue text-white shadow-2xl hover:bg-blue-600 transition-all transform hover:scale-110">
+            <span class="material-symbols-outlined text-3xl">chat_bubble</span>
+            <span id="chatBadge" class="absolute top-0 right-0 h-5 w-5 rounded-full bg-emergency-red border-2 border-white text-white text-xs font-bold flex items-center justify-center">1</span>
+        </button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

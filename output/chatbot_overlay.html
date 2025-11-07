@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AmbuQuick - Chat Assistant</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-blue": "#007BFF",
+                        "emergency-red": "#E63946",
+                        "success-green": "#2ECC71",
+                        "neutral-gray": "#F5F5F5",
+                        "background-dark": "#121212",
+                        "text-dark": "#1C1C1E",
+                        "text-gray": "#8A8A8E",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "Poppins", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .chat-hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chat-visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="font-sans bg-neutral-gray dark:bg-background-dark">
+    <!-- Main page content (demo) -->
+    <div class="min-h-screen p-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-black text-text-dark dark:text-white mb-4">AmbuQuick Chat Assistant</h1>
+            <p class="text-lg text-text-gray dark:text-gray-400 mb-6">
+                Click the chat button in the bottom-right corner to interact with our AI assistant.
+            </p>
+            
+            <div class="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 mb-6">
+                <h2 class="text-2xl font-bold text-text-dark dark:text-white mb-4">Try These Commands:</h2>
+                <ul class="space-y-2 text-text-gray dark:text-gray-400">
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-blue">chat</span>
+                        "book ambulance" - Start booking process
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-blue">chat</span>
+                        "help" - Get assistance
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-blue">chat</span>
+                        "emergency" - Get emergency contact info
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-blue">chat</span>
+                        "status" - Check booking status
+                    </li>
+                </ul>
+            </div>
+
+            <div class="text-center">
+                <a href="landing.html" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-blue text-white rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                    <span class="material-symbols-outlined">home</span>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex flex-col items-end gap-4">
+        <!-- Chat Window -->
+        <div id="chatWindow" class="chat-hidden transition-all duration-300 ease-out flex flex-col w-80 sm:w-96 h-[500px] max-h-[80vh] bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <!-- Header -->
+            <div class="flex items-center justify-between gap-2 px-4 py-4 bg-gradient-to-r from-primary-blue to-blue-600 text-white shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl">support_agent</span>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold leading-tight">AmbuQuick Assistant</h2>
+                        <p class="text-xs opacity-90">Always here to help</p>
+                    </div>
+                </div>
+                <button id="closeChat" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Conversation Area -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-800/50">
+                <!-- Bot Welcome Message -->
+                <div class="flex items-end gap-2">
+                    <div class="w-8 h-8 rounded-full bg-primary-blue flex items-center justify-center flex-shrink-0 shadow">
+                        <span class="material-symbols-outlined text-white text-lg">smart_toy</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="max-w-[260px] rounded-2xl rounded-bl-sm px-4 py-3 bg-white dark:bg-gray-700 shadow-sm">
+                            <p class="text-sm text-text-dark dark:text-white">
+                                👋 Welcome to AmbuQuick! I'm your emergency assistant. How can I help you today?
+                            </p>
+                        </div>
+                        <p class="text-xs text-text-gray px-2">Just now</p>
+                    </div>
+                </div>
+
+                <!-- Suggested Actions -->
+                <div class="flex flex-wrap gap-2 px-2">
+                    <button class="quick-reply px-3 py-2 bg-primary-blue/10 hover:bg-primary-blue/20 text-primary-blue rounded-full text-xs font-semibold transition-colors">
+                        📍 Book Ambulance
+                    </button>
+                    <button class="quick-reply px-3 py-2 bg-emergency-red/10 hover:bg-emergency-red/20 text-emergency-red rounded-full text-xs font-semibold transition-colors">
+                        🚨 Emergency
+                    </button>
+                    <button class="quick-reply px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-text-dark dark:text-white rounded-full text-xs font-semibold transition-colors">
+                        ❓ Help
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shrink-0">
+                <form id="chatForm" class="relative flex items-center gap-2">
+                    <input id="messageInput" 
+                           class="flex-1 pl-4 pr-12 py-3 text-sm text-text-dark dark:text-white bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full focus:ring-2 focus:ring-primary-blue/50 focus:outline-none transition-all" 
+                           placeholder="Type your message..." 
+                           type="text" 
+                           autocomplete="off"/>
+                    <button type="submit" 
+                            class="absolute right-2 flex items-center justify-center h-9 w-9 rounded-full bg-primary-blue text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 transition-all transform hover:scale-105 active:scale-95">
+                        <span class="material-symbols-outlined text-xl">send</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Floating Action Button (FAB) -->
+        <button id="chatToggle" class="relative flex cursor-pointer items-center justify-center rounded-full h-16 w-16 bg-primary-blue text-white shadow-2xl hover:bg-blue-600 transition-all transform hover:scale-110 active:scale-95">
+            <span class="material-symbols-outlined text-3xl">chat_bubble</span>
+            <!-- Notification Badge -->
+            <span id="notificationBadge" class="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-emergency-red border-2 border-white text-white text-xs font-bold">
+                1
+            </span>
+        </button>
+    </div>
+
+    <script>
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chatWindow');
+        const closeChat = document.getElementById('closeChat');
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('messageInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const notificationBadge = document.getElementById('notificationBadge');
+        const quickReplies = document.querySelectorAll('.quick-reply');
+
+        let isChatOpen = false;
+
+        // Toggle chat window
+        function toggleChat() {
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                chatWindow.classList.remove('chat-hidden');
+                chatWindow.classList.add('chat-visible');
+                notificationBadge.style.display = 'none';
+                messageInput.focus();
+            } else {
+                chatWindow.classList.remove('chat-visible');
+                chatWindow.classList.add('chat-hidden');
+            }
+        }
+
+        chatToggle.addEventListener('click', toggleChat);
+        closeChat.addEventListener('click', toggleChat);
+
+        // Add user message
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-end gap-2 justify-end';
+            messageDiv.innerHTML = `
+                <div class="flex flex-col gap-1 items-end">
+                    <div class="max-w-[260px] rounded-2xl rounded-br-sm px-4 py-3 bg-primary-blue text-white shadow-sm">
+                        <p class="text-sm">${escapeHtml(text)}</p>
+                    </div>
+                    <p class="text-xs text-text-gray px-2">Just now</p>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Add bot message
+        function addBotMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-end gap-2';
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-primary-blue flex items-center justify-center flex-shrink-0 shadow">
+                    <span class="material-symbols-outlined text-white text-lg">smart_toy</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <div class="max-w-[260px] rounded-2xl rounded-bl-sm px-4 py-3 bg-white dark:bg-gray-700 shadow-sm">
+                        <p class="text-sm text-text-dark dark:text-white">${text}</p>
+                    </div>
+                    <p class="text-xs text-text-gray px-2">Just now</p>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Simple rule-based chatbot responses
+        function getBotResponse(userMessage) {
+            const msg = userMessage.toLowerCase().trim();
+            
+            if (msg.includes('book') || msg.includes('ambulance')) {
+                return '🚑 I can help you book an ambulance! <br><br>Please provide:<br>1. Your location<br>2. Contact number<br><br>Or click <a href="book_ambulance.html" class="text-primary-blue font-bold underline">here</a> to fill the booking form.';
+            } else if (msg.includes('emergency') || msg.includes('sos')) {
+                return '🚨 For immediate emergency:<br><br>• Click the <span class="font-bold text-emergency-red">SOS button</span> on the home page<br>• Or call emergency hotline: <a href="tel:102" class="text-primary-blue font-bold">102</a>';
+            } else if (msg.includes('status') || msg.includes('track')) {
+                return '📍 To track your ambulance status, please visit your <a href="ambulance_confirmed.html" class="text-primary-blue font-bold underline">booking confirmation page</a>.';
+            } else if (msg.includes('help') || msg.includes('assist')) {
+                return 'ℹ️ I can help you with:<br><br>• Booking an ambulance<br>• Emergency assistance<br>• Tracking your booking<br>• General inquiries<br><br>What would you like to do?';
+            } else if (msg.includes('hi') || msg.includes('hello') || msg.includes('hey')) {
+                return '👋 Hello! How can I assist you with AmbuQuick today?';
+            } else if (msg.includes('thank')) {
+                return '😊 You\'re welcome! Stay safe. Is there anything else I can help you with?';
+            } else {
+                return 'I understand you need assistance. You can:<br><br>• <b>Book an ambulance</b><br>• Get <b>emergency help</b><br>• Check <b>booking status</b><br>• Ask for <b>help</b><br><br>What would you like to do?';
+            }
+        }
+
+        // Handle form submission
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (message) {
+                addUserMessage(message);
+                messageInput.value = '';
+                
+                // Simulate bot typing delay
+                setTimeout(() => {
+                    const response = getBotResponse(message);
+                    addBotMessage(response);
+                }, 500);
+            }
+        });
+
+        // Handle quick replies
+        quickReplies.forEach(button => {
+            button.addEventListener('click', () => {
+                const text = button.textContent.trim();
+                messageInput.value = text.replace(/[^\w\s]/g, '');
+                chatForm.dispatchEvent(new Event('submit'));
+            });
+        });
+
+        // Utility functions
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

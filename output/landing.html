@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AmbuQuick - Emergency Response, Simplified</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-blue": "#007BFF",
+                        "emergency-red": "#E63946",
+                        "success-green": "#2ECC71",
+                        "neutral-gray": "#F5F5F5",
+                        "background-dark": "#121212",
+                        "text-dark": "#1C1C1E",
+                        "text-gray": "#8A8A8E",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "Poppins", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 30px rgba(230, 57, 70, 0.6), 0 0 60px rgba(230, 57, 70, 0.4);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 20px rgba(230, 57, 70, 0.5), 0 0 40px rgba(230, 57, 70, 0.3);
+            }
+            to {
+                box-shadow: 0 0 40px rgba(230, 57, 70, 0.7), 0 0 80px rgba(230, 57, 70, 0.5);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .pulse-subtle {
+            animation: pulse-subtle 2s ease-in-out infinite;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            filter: grayscale(20%) contrast(1.1);
+        }
+
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glassmorphism {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="font-sans bg-neutral-gray dark:bg-background-dark overflow-x-hidden">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <!-- Animated Header -->
+        <header class="absolute top-0 left-0 right-0 z-30 p-4 md:p-6 lg:p-8 glassmorphism">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <span class="material-symbols-outlined text-emergency-red text-3xl md:text-4xl pulse-subtle">emergency</span>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-success-green rounded-full animate-ping"></div>
+                    </div>
+                    <div>
+                        <span class="text-2xl md:text-3xl font-black text-text-dark dark:text-white">AmbuQuick</span>
+                        <p class="text-xs text-text-gray dark:text-gray-400 hidden sm:block">24/7 Emergency Support</p>
+                    </div>
+                </div>
+                <nav class="flex items-center gap-4">
+                    <a class="hidden md:inline-flex items-center gap-2 text-text-dark dark:text-white hover:text-primary-blue transition-colors px-4 py-2 rounded-lg text-sm font-bold" href="#">
+                        <span class="material-symbols-outlined text-lg">info</span>
+                        About
+                    </a>
+                    <a class="inline-flex items-center gap-2 bg-primary-blue/10 dark:bg-primary-blue/20 text-primary-blue hover:bg-primary-blue hover:text-white transition-all px-4 py-2 rounded-lg text-sm font-bold" href="#">
+                        <span class="material-symbols-outlined text-lg">person</span>
+                        <span class="hidden sm:inline">Login</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Modern Interactive Map Background -->
+        <div class="absolute inset-0 z-0">
+            <div id="map" class="h-full w-full"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent dark:from-background-dark dark:via-background-dark/80 dark:to-transparent"></div>
+            
+            <!-- Decorative Elements -->
+            <div class="absolute top-20 left-10 w-32 h-32 bg-primary-blue/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-20 right-10 w-40 h-40 bg-emergency-red/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="relative z-10 flex flex-col flex-grow items-center justify-center min-h-screen p-4 md:p-6 lg:p-8 pt-24 md:pt-32">
+            <div class="flex flex-col items-center text-center w-full max-w-6xl space-y-8 md:space-y-12">
+                <!-- Hero Section -->
+                <div class="space-y-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-emergency-red/10 text-emergency-red rounded-full text-sm font-bold mb-4">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emergency-red opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emergency-red"></span>
+                        </span>
+                        Available 24/7 • Response Time: &lt;8 minutes
+                    </div>
+                    
+                    <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight text-text-dark dark:text-white">
+                        <span class="bg-gradient-to-r from-primary-blue to-emergency-red bg-clip-text text-transparent">AmbuQuick</span>
+                    </h1>
+                    
+                    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold leading-relaxed text-text-gray dark:text-neutral-gray/90 max-w-3xl mx-auto">
+                        Emergency Response, <span class="text-success-green">Simplified</span>.
+                    </h2>
+                    
+                    <p class="text-base md:text-lg text-text-gray dark:text-gray-400 max-w-2xl mx-auto">
+                        Lightning-fast ambulance booking with real-time tracking, trained paramedics, and 24/7 emergency support. Your safety is our priority.
+                    </p>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
+                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg">
+                        <div class="text-3xl md:text-4xl font-black text-primary-blue mb-2">8min</div>
+                        <div class="text-sm text-text-gray dark:text-gray-400 font-semibold">Avg Response</div>
+                    </div>
+                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg">
+                        <div class="text-3xl md:text-4xl font-black text-success-green mb-2">24/7</div>
+                        <div class="text-sm text-text-gray dark:text-gray-400 font-semibold">Availability</div>
+                    </div>
+                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg">
+                        <div class="text-3xl md:text-4xl font-black text-emergency-red mb-2">500+</div>
+                        <div class="text-sm text-text-gray dark:text-gray-400 font-semibold">Ambulances</div>
+                    </div>
+                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg">
+                        <div class="text-3xl md:text-4xl font-black text-primary-blue mb-2">98%</div>
+                        <div class="text-sm text-text-gray dark:text-gray-400 font-semibold">Success Rate</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-6 w-full max-w-2xl">
+                    <a href="book_ambulance.html" 
+                       class="group flex-1 flex items-center justify-center gap-3 overflow-hidden rounded-2xl h-20 px-8 bg-gradient-to-r from-primary-blue to-blue-600 text-white text-lg font-bold hover:shadow-2xl transition-all transform hover:scale-105">
+                        <span class="material-symbols-outlined text-4xl">add_box</span>
+                        <div class="text-left">
+                            <div class="text-sm opacity-90">Standard Booking</div>
+                            <div>BOOK AMBULANCE</div>
+                        </div>
+                    </a>
+                    <a href="sos_activation.html" 
+                       class="group flex-1 flex items-center justify-center gap-3 overflow-hidden rounded-full h-20 px-8 bg-gradient-to-r from-emergency-red to-red-600 text-white text-lg font-bold glow-effect transition-all transform hover:scale-105">
+                        <span class="material-symbols-outlined text-4xl animate-pulse">sos</span>
+                        <div class="text-left">
+                            <div class="text-sm opacity-90">Emergency</div>
+                            <div>SOS ALERT</div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-8">
+                    <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="w-14 h-14 bg-primary-blue/10 rounded-xl flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-primary-blue text-3xl">location_on</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-text-dark dark:text-white mb-2">Real-Time Tracking</h3>
+                        <p class="text-text-gray dark:text-gray-400">Track your ambulance in real-time with GPS precision and live ETA updates.</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="w-14 h-14 bg-success-green/10 rounded-xl flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-success-green text-3xl">medical_services</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-text-dark dark:text-white mb-2">Trained Paramedics</h3>
+                        <p class="text-text-gray dark:text-gray-400">Certified medical professionals equipped with advanced life support systems.</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="w-14 h-14 bg-emergency-red/10 rounded-xl flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-emergency-red text-3xl">schedule</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-text-dark dark:text-white mb-2">Instant Dispatch</h3>
+                        <p class="text-text-gray dark:text-gray-400">Automated routing ensures the nearest ambulance reaches you fastest.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Floating Chatbot Button -->
+        <div class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 float-animation">
+            <a href="chatbot_overlay.html" 
+               class="group flex w-16 h-16 md:w-18 md:h-18 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-primary-blue to-blue-600 text-white shadow-2xl hover:w-auto hover:pl-6 hover:pr-7 transition-all duration-300 ease-in-out">
+                <span class="material-symbols-outlined text-3xl">chat_bubble</span>
+                <span class="truncate text-sm font-bold ml-3 max-w-0 group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap">Need Help?</span>
+            </a>
+            <div class="absolute -top-1 -right-1 w-4 h-4 bg-success-green rounded-full border-2 border-white animate-pulse"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize modern map with Leaflet.js
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create map centered on a default location
+            const map = L.map('map', {
+                zoomControl: false,
+                attributionControl: false,
+                dragging: false,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                touchZoom: false
+            }).setView([40.7128, -74.0060], 12);
+
+            // Modern dark map style
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            // Add some ambulance markers
+            const ambulanceIcon = L.divIcon({
+                className: 'custom-ambulance-marker',
+                html: '<div style="background: #E63946; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);">🚑</div>',
+                iconSize: [40, 40]
+            });
+
+            // Add multiple ambulance markers
+            const locations = [
+                [40.7128, -74.0060],
+                [40.7580, -73.9855],
+                [40.6782, -73.9442],
+                [40.7489, -73.9680]
+            ];
+
+            locations.forEach(loc => {
+                L.marker(loc, { icon: ambulanceIcon }).addTo(map);
+            });
+
+            // Add pulsing circle for coverage area
+            L.circle([40.7128, -74.0060], {
+                color: '#007BFF',
+                fillColor: '#007BFF',
+                fillOpacity: 0.1,
+                radius: 5000
+            }).addTo(map);
+        });
+    </script>
+</body>
+</html>

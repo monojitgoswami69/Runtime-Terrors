@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AmbuQuick - Ambulance Confirmed</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-blue": "#007BFF",
+                        "emergency-red": "#E63946",
+                        "success-green": "#2ECC71",
+                        "neutral-gray": "#F5F5F5",
+                        "background-dark": "#121212",
+                        "text-dark": "#1C1C1E",
+                        "text-gray": "#8A8A8E",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "Poppins", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        @keyframes moveambulance {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+        .ambulance-moving {
+            animation: moveambulance 2s ease-in-out infinite;
+        }
+        
+        @keyframes progressBar {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        .progress-animation {
+            animation: progressBar 8s linear forwards;
+        }
+    </style>
+</head>
+<body class="font-sans bg-neutral-gray dark:bg-background-dark">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <div class="flex-1 flex justify-center items-center py-10 sm:py-20 px-4">
+            <div class="max-w-[500px] w-full">
+                <!-- Success Icon and Header -->
+                <div class="flex flex-col items-center text-center mb-8">
+                    <div class="relative mb-4">
+                        <span class="material-symbols-outlined text-success-green animate-bounce" style="font-size: 64px;">check_circle</span>
+                    </div>
+                    <h1 class="text-text-dark dark:text-white text-4xl font-black mb-3">Ambulance Confirmed!</h1>
+                    <p class="text-text-gray dark:text-gray-400 text-lg font-medium">Help is on the way. Driver details below.</p>
+                </div>
+
+                <!-- Ambulance Details Card -->
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden">
+                    <!-- Ambulance Illustration -->
+                    <div class="w-full h-48 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center relative overflow-hidden">
+                        <div class="ambulance-moving">
+                            <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Ambulance body -->
+                                <rect x="20" y="30" width="80" height="30" fill="#E63946" rx="4"/>
+                                <rect x="70" y="20" width="30" height="20" fill="#E63946" rx="2"/>
+                                <!-- Windows -->
+                                <rect x="75" y="23" width="10" height="12" fill="#FFFFFF" rx="1"/>
+                                <rect x="88" y="23" width="10" height="12" fill="#FFFFFF" rx="1"/>
+                                <!-- Cross -->
+                                <rect x="35" y="38" width="12" height="4" fill="#FFFFFF"/>
+                                <rect x="39" y="34" width="4" height="12" fill="#FFFFFF"/>
+                                <!-- Wheels -->
+                                <circle cx="35" cy="60" r="8" fill="#1C1C1E"/>
+                                <circle cx="35" cy="60" r="4" fill="#8A8A8E"/>
+                                <circle cx="85" cy="60" r="8" fill="#1C1C1E"/>
+                                <circle cx="85" cy="60" r="4" fill="#8A8A8E"/>
+                                <!-- Lights -->
+                                <circle cx="98" cy="35" r="3" fill="#FFA500" opacity="0.8"/>
+                            </svg>
+                        </div>
+                        <!-- Progress indicator -->
+                        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700">
+                            <div class="h-full bg-success-green progress-animation"></div>
+                        </div>
+                    </div>
+
+                    <!-- Status and ETA -->
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-800">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-text-gray dark:text-gray-400 text-sm font-semibold uppercase tracking-wide mb-1">Status</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-2 h-2 bg-success-green rounded-full animate-pulse"></span>
+                                    <p class="text-text-dark dark:text-white text-xl font-bold">En Route</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-text-gray dark:text-gray-400 text-sm font-semibold uppercase tracking-wide mb-1">ETA</p>
+                                <p class="text-primary-blue text-2xl font-black">8 min</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Driver and Vehicle Details -->
+                    <div class="p-6 space-y-4">
+                        <!-- Driver -->
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center justify-center rounded-full bg-gradient-to-br from-primary-blue to-blue-600 text-white w-14 h-14 shadow-lg">
+                                <span class="material-symbols-outlined text-3xl">person</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-text-dark dark:text-white text-lg font-bold">Rajesh Kumar</p>
+                                <p class="text-text-gray dark:text-gray-400 text-sm font-medium">Driver • 4.9 ⭐ (520 trips)</p>
+                            </div>
+                            <a href="tel:+911234567890" class="p-3 rounded-full bg-success-green/10 hover:bg-success-green/20 transition-colors">
+                                <span class="material-symbols-outlined text-success-green">call</span>
+                            </a>
+                        </div>
+
+                        <!-- Vehicle -->
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center justify-center rounded-full bg-gradient-to-br from-emergency-red to-red-600 text-white w-14 h-14 shadow-lg">
+                                <span class="material-symbols-outlined text-3xl">ambulance</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-text-dark dark:text-white text-lg font-bold">Force Traveller (AC)</p>
+                                <p class="text-text-gray dark:text-gray-400 text-sm font-medium">Vehicle No: DL-01-AB-1234</p>
+                            </div>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                            <div class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-primary-blue text-xl">info</span>
+                                <p class="text-sm text-text-dark dark:text-white">
+                                    Your ambulance is equipped with <span class="font-bold">emergency medical equipment</span> and a <span class="font-bold">trained paramedic</span>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                    <button class="flex-1 flex items-center justify-center gap-2 rounded-lg h-14 px-6 bg-primary-blue text-white font-bold text-base hover:bg-blue-600 transition-colors shadow-lg">
+                        <span class="material-symbols-outlined">map</span>
+                        View Map
+                    </button>
+                    <a href="landing.html" class="flex-1 flex items-center justify-center gap-2 rounded-lg h-14 px-6 bg-gray-200 dark:bg-gray-800 text-text-dark dark:text-white font-bold text-base hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors">
+                        <span class="material-symbols-outlined">home</span>
+                        Back to Home
+                    </a>
+                </div>
+
+                <!-- Emergency Contact -->
+                <div class="mt-6 text-center">
+                    <p class="text-text-gray dark:text-gray-400 text-sm mb-2">Need immediate assistance?</p>
+                    <a href="tel:102" class="inline-flex items-center gap-2 text-emergency-red font-bold hover:underline">
+                        <span class="material-symbols-outlined">emergency</span>
+                        Call Emergency: 102
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

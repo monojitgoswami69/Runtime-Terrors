@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AmbuQuick - Help is on the way</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-blue": "#007BFF",
+                        "emergency-red": "#E63946",
+                        "success-green": "#2ECC71",
+                        "neutral-gray": "#F5F5F5",
+                        "background-dark": "#121212",
+                        "text-dark": "#1C1C1E",
+                        "text-gray": "#8A8A8E",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "Poppins", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        @keyframes ping {
+            75%, 100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        .animate-ping {
+            animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes slideProgress {
+            from { width: 0%; }
+            to { width: 80%; }
+        }
+        
+        .progress-slide {
+            animation: slideProgress 3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <div class="relative flex min-h-screen w-full flex-col bg-gradient-to-b from-red-50 via-white to-green-50 dark:from-background-dark/50 dark:via-background-dark dark:to-background-dark">
+        <!-- Decorative Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-10 w-32 h-32 bg-success-green/5 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-20 right-10 w-40 h-40 bg-emergency-red/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="relative z-10 flex h-full grow flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+            <main class="w-full max-w-2xl fade-in">
+                <!-- Success Card -->
+                <div class="flex flex-col rounded-2xl bg-white dark:bg-gray-900 shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-800">
+                    <!-- Header Section -->
+                    <div class="flex flex-col gap-6 p-8 sm:p-12 text-center">
+                        <!-- Success Icon -->
+                        <div class="flex justify-center">
+                            <div class="relative">
+                                <div class="w-24 h-24 bg-success-green/10 rounded-full flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-success-green" style="font-size: 64px;">check_circle</span>
+                                </div>
+                                <div class="absolute inset-0 w-24 h-24 bg-success-green/20 rounded-full animate-ping"></div>
+                            </div>
+                        </div>
+
+                        <!-- Title and Message -->
+                        <div class="flex flex-col gap-3">
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black leading-tight text-text-dark dark:text-white">
+                                <span class="text-success-green">✓</span> Help is on the way
+                            </h1>
+                            <p class="text-base sm:text-lg font-medium text-text-gray dark:text-gray-400 max-w-md mx-auto">
+                                Your location has been shared with the nearest emergency response team.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Section -->
+                    <div class="border-t border-gray-100 dark:border-gray-800 px-6 sm:px-12 py-8">
+                        <div class="flex flex-col items-center gap-6">
+                            <!-- Progress Bar -->
+                            <div class="w-full flex items-center justify-center gap-4">
+                                <!-- Start Point -->
+                                <div class="relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-emergency-red/10 dark:bg-emergency-red/20 border-2 border-emergency-red">
+                                    <span class="material-symbols-outlined text-3xl text-emergency-red">emergency</span>
+                                    <div class="absolute h-full w-full animate-ping rounded-full bg-emergency-red/30"></div>
+                                </div>
+
+                                <!-- Progress Line -->
+                                <div class="relative h-2 flex-grow rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-emergency-red via-primary-blue to-success-green progress-slide"></div>
+                                </div>
+
+                                <!-- End Point -->
+                                <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-success-green/10 dark:bg-success-green/20 border-2 border-success-green">
+                                    <span class="material-symbols-outlined text-3xl text-success-green">pin_drop</span>
+                                </div>
+                            </div>
+
+                            <!-- ETA Display -->
+                            <div class="text-center">
+                                <p class="text-text-gray dark:text-gray-400 text-sm font-semibold uppercase tracking-wide mb-2">Estimated Arrival</p>
+                                <div class="flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-success-green text-4xl">schedule</span>
+                                    <h2 class="text-4xl sm:text-5xl font-black text-success-green">3 minutes</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Team Info -->
+                    <div class="border-t border-gray-100 dark:border-gray-800 px-6 sm:px-12 py-6 bg-gradient-to-r from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-primary-blue text-2xl flex-shrink-0">info</span>
+                            <div>
+                                <p class="text-sm font-bold text-text-dark dark:text-white mb-1">Emergency Team Dispatched</p>
+                                <p class="text-sm text-text-gray dark:text-gray-400">
+                                    A fully equipped emergency response team with trained paramedics is en route to your location.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Sharing Status -->
+                    <div class="border-t border-gray-100 dark:border-gray-800 px-6 sm:px-12 py-6">
+                        <div class="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-success-green/20 rounded-full flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-success-green">my_location</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-text-dark dark:text-white">Location Tracking Active</p>
+                                    <p class="text-xs text-text-gray dark:text-gray-400">Real-time updates sent to emergency team</p>
+                                </div>
+                            </div>
+                            <span class="inline-block w-3 h-3 bg-success-green rounded-full animate-pulse"></span>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="border-t border-gray-100 dark:border-gray-800 p-6 sm:p-8">
+                        <div class="flex flex-col gap-4">
+                            <a href="landing.html" class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg h-14 px-6 bg-emergency-red text-white text-base font-bold hover:bg-red-600 transition-all transform hover:scale-105 shadow-lg">
+                                <span class="material-symbols-outlined">home</span>
+                                <span>Back to Home</span>
+                            </a>
+                            
+                            <!-- Emergency Contact -->
+                            <div class="text-center pt-2">
+                                <p class="text-text-gray dark:text-gray-400 text-sm mb-2">Need to speak with emergency services?</p>
+                                <a href="tel:102" class="inline-flex items-center gap-2 text-primary-blue font-bold hover:underline">
+                                    <span class="material-symbols-outlined">call</span>
+                                    Call Emergency Hotline: 102
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Safety Tips -->
+                <div class="mt-6 p-4 bg-white/50 dark:bg-gray-900/50 rounded-lg backdrop-blur-sm border border-gray-200 dark:border-gray-800">
+                    <div class="flex items-start gap-2">
+                        <span class="material-symbols-outlined text-emergency-red text-xl flex-shrink-0 mt-0.5">health_and_safety</span>
+                        <div>
+                            <p class="text-sm font-bold text-text-dark dark:text-white mb-1">While You Wait:</p>
+                            <ul class="text-xs text-text-gray dark:text-gray-400 space-y-1 list-disc list-inside">
+                                <li>Stay calm and in a safe location</li>
+                                <li>Keep your phone nearby and charged</li>
+                                <li>If possible, have someone stay with you</li>
+                                <li>Follow any instructions from emergency services</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
