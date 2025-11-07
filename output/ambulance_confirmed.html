@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -45,18 +47,34 @@
         .progress-animation {
             animation: progressBar 8s linear forwards;
         }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        .leaflet-container {
+            border-radius: 12px;
+        }
     </style>
 </head>
-<body class="font-sans bg-neutral-gray dark:bg-background-dark">
+<body class="font-sans bg-gradient-to-b from-blue-50 via-white to-gray-50 dark:bg-background-dark">
     <div class="relative flex min-h-screen w-full flex-col">
         <div class="flex-1 flex justify-center items-center py-10 sm:py-20 px-4">
-            <div class="max-w-[500px] w-full">
+            <div class="max-w-6xl w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left Column: Ambulance Details -->
+                    <div class="slide-in">
                 <!-- Success Icon and Header -->
                 <div class="flex flex-col items-center text-center mb-8">
                     <div class="relative mb-4">
                         <span class="material-symbols-outlined text-success-green animate-bounce" style="font-size: 64px;">check_circle</span>
                     </div>
-                    <h1 class="text-text-dark dark:text-white text-4xl font-black mb-3">Ambulance Confirmed!</h1>
+                    <h1 class="text-text-dark dark:text-white text-4xl md:text-5xl font-black mb-3">Ambulance Confirmed!</h1>
                     <p class="text-text-gray dark:text-gray-400 text-lg font-medium">Help is on the way. Driver details below.</p>
                 </div>
 
@@ -146,16 +164,87 @@
                     </div>
                 </div>
 
+                <!-- Journey Timeline -->
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden p-6">
+                    <h3 class="text-lg font-bold text-text-dark dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-blue">timeline</span>
+                        Journey Progress
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex gap-3">
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 h-8 rounded-full bg-success-green flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white text-lg">check</span>
+                                </div>
+                                <div class="w-0.5 h-12 bg-gray-300 dark:bg-gray-700"></div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-text-dark dark:text-white">Booking Confirmed</p>
+                                <p class="text-xs text-text-gray dark:text-gray-400">Just now</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 h-8 rounded-full bg-success-green flex items-center justify-center animate-pulse">
+                                    <span class="material-symbols-outlined text-white text-lg">local_shipping</span>
+                                </div>
+                                <div class="w-0.5 h-12 bg-gray-300 dark:bg-gray-700"></div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-text-dark dark:text-white">Ambulance En Route</p>
+                                <p class="text-xs text-text-gray dark:text-gray-400">ETA: 8 minutes</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="flex flex-col items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-gray-500 text-lg">location_on</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-text-gray dark:text-gray-500">Arrival at Location</p>
+                                <p class="text-xs text-text-gray dark:text-gray-600">Pending</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Safety Tips -->
+                <div class="mt-6 bg-gradient-to-r from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900 rounded-xl border border-blue-200 dark:border-gray-700 p-6">
+                    <h3 class="text-lg font-bold text-text-dark dark:text-white mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-success-green">health_and_safety</span>
+                        While You Wait
+                    </h3>
+                    <ul class="space-y-2 text-sm text-text-dark dark:text-gray-300">
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-success-green text-lg">check_circle</span>
+                            Stay in a well-lit, safe location
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-success-green text-lg">check_circle</span>
+                            Keep your phone charged and accessible
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-success-green text-lg">check_circle</span>
+                            Prepare any necessary medical documents
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-success-green text-lg">check_circle</span>
+                            Have someone stay with you if possible
+                        </li>
+                    </ul>
+                </div>
+
                 <!-- Action Buttons -->
                 <div class="mt-8 flex flex-col sm:flex-row gap-4">
-                    <button class="flex-1 flex items-center justify-center gap-2 rounded-lg h-14 px-6 bg-primary-blue text-white font-bold text-base hover:bg-blue-600 transition-colors shadow-lg">
-                        <span class="material-symbols-outlined">map</span>
-                        View Map
-                    </button>
-                    <a href="landing.html" class="flex-1 flex items-center justify-center gap-2 rounded-lg h-14 px-6 bg-gray-200 dark:bg-gray-800 text-text-dark dark:text-white font-bold text-base hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors">
-                        <span class="material-symbols-outlined">home</span>
-                        Back to Home
+                    <a href="tel:+911234567890" class="flex-1 flex items-center justify-center gap-2 rounded-lg h-14 px-6 bg-success-green text-white font-bold text-base hover:bg-green-600 transition-colors shadow-lg">
+                        <span class="material-symbols-outlined">call</span>
+                        Call Driver
                     </a>
+                    <button class="flex-1 flex items-center justify-center gap-2 rounded-lg h-14 px-6 bg-primary-blue text-white font-bold text-base hover:bg-blue-600 transition-colors shadow-lg">
+                        <span class="material-symbols-outlined">share_location</span>
+                        Share Location
+                    </button>
                 </div>
 
                 <!-- Emergency Contact -->
@@ -166,8 +255,131 @@
                         Call Emergency: 102
                     </a>
                 </div>
+                    </div>
+
+                    <!-- Right Column: Live Map Tracking -->
+                    <div class="slide-in lg:sticky lg:top-8 h-fit">
+                        <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden">
+                            <div class="p-4 bg-gradient-to-r from-primary-blue to-blue-600 text-white">
+                                <h3 class="text-lg font-bold flex items-center gap-2">
+                                    <span class="material-symbols-outlined">map</span>
+                                    Live Tracking
+                                </h3>
+                                <p class="text-sm opacity-90 mt-1">Real-time ambulance location</p>
+                            </div>
+                            <div class="relative">
+                                <div id="trackingMap" class="w-full h-[400px] lg:h-[600px]"></div>
+                                <div class="absolute top-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-3 py-2 flex items-center gap-2">
+                                    <span class="inline-block w-2 h-2 bg-success-green rounded-full animate-pulse"></span>
+                                    <span class="text-xs font-bold text-text-dark dark:text-white">Tracking Active</span>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary-blue">speed</span>
+                                        <span class="text-sm font-semibold text-text-dark dark:text-white">Distance</span>
+                                    </div>
+                                    <span class="text-sm font-bold text-primary-blue">3.2 km</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-success-green">schedule</span>
+                                        <span class="text-sm font-semibold text-text-dark dark:text-white">Estimated Arrival</span>
+                                    </div>
+                                    <span class="text-sm font-bold text-success-green">8 minutes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Back to Home Button -->
+                        <a href="landing.html" class="mt-4 flex items-center justify-center gap-2 rounded-lg h-14 px-6 bg-gray-200 dark:bg-gray-800 text-text-dark dark:text-white font-bold text-base hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors w-full">
+                            <span class="material-symbols-outlined">home</span>
+                            Back to Home
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Initialize the tracking map
+        const map = L.map('trackingMap').setView([28.6139, 77.2090], 13);
+
+        // Add CartoDB Positron tile layer (clean, modern style)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+        }).addTo(map);
+
+        // Custom ambulance icon
+        const ambulanceIcon = L.divIcon({
+            className: 'custom-icon',
+            html: '<div style="background: linear-gradient(135deg, #E63946, #DC2626); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4); border: 3px solid white;"><span style="color: white; font-size: 28px;" class="material-symbols-outlined">ambulance</span></div>',
+            iconSize: [48, 48],
+            iconAnchor: [24, 24]
+        });
+
+        // Custom destination icon
+        const destinationIcon = L.divIcon({
+            className: 'custom-icon',
+            html: '<div style="background: linear-gradient(135deg, #2ECC71, #27AE60); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4); border: 3px solid white;"><span style="color: white; font-size: 24px;" class="material-symbols-outlined">location_on</span></div>',
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
+        });
+
+        // Ambulance location (moving)
+        const ambulanceLat = 28.5355;
+        const ambulanceLng = 77.3910;
+        const ambulanceMarker = L.marker([ambulanceLat, ambulanceLng], { icon: ambulanceIcon })
+            .addTo(map)
+            .bindPopup('<div class="text-center p-2"><p class="font-bold text-emergency-red">Ambulance</p><p class="text-xs text-gray-600">DL-01-AB-1234</p><p class="text-xs font-semibold text-success-green">ETA: 8 min</p></div>');
+
+        // Destination location
+        const destinationLat = 28.6139;
+        const destinationLng = 77.2090;
+        const destinationMarker = L.marker([destinationLat, destinationLng], { icon: destinationIcon })
+            .addTo(map)
+            .bindPopup('<div class="text-center p-2"><p class="font-bold text-success-green">Your Location</p><p class="text-xs text-gray-600">Pickup Point</p></div>');
+
+        // Draw route line
+        const routeLine = L.polyline([
+            [ambulanceLat, ambulanceLng],
+            [destinationLat, destinationLng]
+        ], {
+            color: '#007BFF',
+            weight: 4,
+            opacity: 0.7,
+            dashArray: '10, 10'
+        }).addTo(map);
+
+        // Fit map to show both markers
+        const bounds = L.latLngBounds([
+            [ambulanceLat, ambulanceLng],
+            [destinationLat, destinationLng]
+        ]);
+        map.fitBounds(bounds, { padding: [50, 50] });
+
+        // Simulate ambulance movement
+        let step = 0;
+        const totalSteps = 100;
+        setInterval(() => {
+            if (step < totalSteps) {
+                step++;
+                const ratio = step / totalSteps;
+                const newLat = ambulanceLat + (destinationLat - ambulanceLat) * ratio;
+                const newLng = ambulanceLng + (destinationLng - ambulanceLng) * ratio;
+                ambulanceMarker.setLatLng([newLat, newLng]);
+                
+                // Update route
+                routeLine.setLatLngs([
+                    [newLat, newLng],
+                    [destinationLat, destinationLng]
+                ]);
+            }
+        }, 500);
+    </script>
 </body>
 </html>
