@@ -125,7 +125,7 @@
             </div>
 
             <div class="text-center">
-                <a href="landing.html" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-blue text-white rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-blue text-white rounded-lg font-bold hover:bg-blue-600 transition-colors">
                     <span class="material-symbols-outlined">home</span>
                     Back to Home
                 </a>
@@ -134,22 +134,22 @@
     </div>
 
     <!-- Chatbot Container -->
-    <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex flex-col items-end gap-4">
+    <div class="fixed bottom-3 right-3 sm:bottom-4 sm:right-4 md:bottom-6 md:right-6 z-50 flex flex-col items-end gap-3 sm:gap-4">
         <!-- Chat Window -->
-        <div id="chatWindow" class="chat-hidden transition-all duration-300 ease-out flex flex-col w-80 sm:w-96 h-[500px] max-h-[80vh] bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div id="chatWindow" class="chat-hidden transition-all duration-300 ease-out flex flex-col w-[calc(100vw-1.5rem)] sm:w-80 md:w-96 h-[80vh] sm:h-[500px] max-h-[80vh] bg-white dark:bg-gray-900 shadow-2xl rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
             <!-- Header -->
-            <div class="flex items-center justify-between gap-2 px-4 py-4 bg-gradient-to-r from-primary-blue to-blue-600 text-white shrink-0">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-2xl">support_agent</span>
+            <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-3 sm:py-4 bg-gradient-to-r from-primary-blue to-blue-600 text-white shrink-0">
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-xl sm:text-2xl">support_agent</span>
                     </div>
-                    <div>
-                        <h2 class="text-base font-bold leading-tight">AmbuQuick Assistant</h2>
-                        <p class="text-xs opacity-90">Always here to help</p>
+                    <div class="min-w-0">
+                        <h2 class="text-sm sm:text-base font-bold leading-tight truncate">AmbuQuick Assistant</h2>
+                        <p class="text-[10px] sm:text-xs opacity-90 truncate">Always here to help</p>
                     </div>
                 </div>
-                <button id="closeChat" class="p-2 hover:bg-white/10 rounded-full transition-colors">
-                    <span class="material-symbols-outlined">close</span>
+                <button id="closeChat" class="p-1.5 sm:p-2 hover:bg-white/10 rounded-full transition-colors flex-shrink-0">
+                    <span class="material-symbols-outlined text-xl sm:text-2xl">close</span>
                 </button>
             </div>
 
@@ -188,26 +188,26 @@
             </div>
 
             <!-- Input Area -->
-            <div class="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shrink-0">
+            <div class="p-3 sm:p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shrink-0">
                 <form id="chatForm" class="relative flex items-center gap-2">
                     <input id="messageInput" 
-                           class="flex-1 pl-4 pr-12 py-3 text-sm text-text-dark dark:text-white bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full focus:ring-2 focus:ring-primary-blue/50 focus:outline-none transition-all" 
+                           class="flex-1 pl-3 pr-10 sm:pl-4 sm:pr-12 py-2 sm:py-3 text-xs sm:text-sm text-text-dark dark:text-white bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full focus:ring-2 focus:ring-primary-blue/50 focus:outline-none transition-all" 
                            placeholder="Type your message..." 
                            type="text" 
                            autocomplete="off"/>
                     <button type="submit" 
-                            class="absolute right-2 flex items-center justify-center h-9 w-9 rounded-full bg-primary-blue text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 transition-all transform hover:scale-105 active:scale-95">
-                        <span class="material-symbols-outlined text-xl">send</span>
+                            class="absolute right-1 sm:right-2 flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary-blue text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 transition-all transform hover:scale-105 active:scale-95">
+                        <span class="material-symbols-outlined text-lg sm:text-xl">send</span>
                     </button>
                 </form>
             </div>
         </div>
 
         <!-- Floating Action Button (FAB) -->
-        <button id="chatToggle" class="relative flex cursor-pointer items-center justify-center rounded-full h-16 w-16 bg-primary-blue text-white shadow-2xl hover:bg-blue-600 transition-all transform hover:scale-110 active:scale-95">
-            <span class="material-symbols-outlined text-3xl">chat_bubble</span>
+        <button id="chatToggle" class="relative flex cursor-pointer items-center justify-center rounded-full h-14 w-14 sm:h-16 sm:w-16 bg-primary-blue text-white shadow-2xl hover:bg-blue-600 transition-all transform hover:scale-110 active:scale-95">
+            <span class="material-symbols-outlined text-2xl sm:text-3xl">chat_bubble</span>
             <!-- Notification Badge -->
-            <span id="notificationBadge" class="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-emergency-red border-2 border-white text-white text-xs font-bold">
+            <span id="notificationBadge" class="absolute top-0 right-0 flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-emergency-red border-2 border-white text-white text-[10px] sm:text-xs font-bold">
                 1
             </span>
         </button>
