@@ -5,9 +5,12 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>AmbuQuick - SOS Activated</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700" rel="stylesheet"/>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -18,12 +21,16 @@
                         "emergency-red": "#E63946",
                         "success-green": "#2ECC71",
                         "neutral-gray": "#F5F5F5",
-                        "background-dark": "#121212",
+                        "background-dark": "#0A0E27",
                         "text-dark": "#1C1C1E",
-                        "text-gray": "#8A8A8E",
+                        "text-gray": "#6B7280",
+                        "accent-purple": "#8B5CF6",
+                        "accent-orange": "#F59E0B",
                     },
                     fontFamily: {
-                        "sans": ["Inter", "Poppins", "sans-serif"],
+                        "sans": ["Inter", "system-ui", "sans-serif"],
+                        "display": ["Poppins", "Inter", "sans-serif"],
+                        "mono": ["Space Grotesk", "monospace"],
                     },
                 },
             },
@@ -33,16 +40,18 @@
         body {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: "liga" 1, "kern" 1;
+            text-rendering: optimizeLegibility;
         }
 
         @keyframes pulse {
             0% {
                 transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7);
+                box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.8);
             }
             70% {
                 transform: scale(1);
-                box-shadow: 0 0 0 50px rgba(230, 57, 70, 0);
+                box-shadow: 0 0 0 60px rgba(230, 57, 70, 0);
             }
             100% {
                 transform: scale(0.95);
@@ -56,12 +65,12 @@
 
         @keyframes radialGlow {
             0%, 100% {
-                opacity: 0.3;
+                opacity: 0.4;
                 transform: scale(1);
             }
             50% {
-                opacity: 0.6;
-                transform: scale(1.1);
+                opacity: 0.7;
+                transform: scale(1.15);
             }
         }
 
@@ -75,6 +84,18 @@
             transition: stroke-dashoffset 1s linear;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
+            filter: drop-shadow(0 0 15px rgba(230, 57, 70, 0.8));
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            background-size: 1000px 100%;
+            animation: shimmer 3s infinite;
         }
     </style>
 </head>
@@ -89,12 +110,12 @@
             <div class="max-w-md w-full flex flex-col items-center justify-center">
                 <!-- Header -->
                 <div class="text-center mb-4 sm:mb-6">
-                    <div class="flex items-center justify-center gap-2 mb-2 sm:mb-3">
-                        <span class="material-symbols-outlined text-emergency-red text-3xl sm:text-4xl animate-pulse">emergency</span>
-                        <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">SOS ACTIVATED</h1>
+                    <div class="flex items-center justify-center gap-3 mb-3">
+                        <span class="material-symbols-outlined text-emergency-red text-4xl sm:text-5xl animate-pulse drop-shadow-[0_0_20px_rgba(230,57,70,0.8)]">emergency</span>
+                        <h1 class="text-white text-3xl sm:text-4xl md:text-5xl font-black tracking-tight font-display">SOS ACTIVATED</h1>
                     </div>
-                    <p class="text-white/80 text-sm sm:text-base font-semibold px-4">Sending emergency signal in...</p>
-                    <p class="text-white/60 text-xs mt-1 px-4">False alarm? Cancel below or skip if urgent</p>
+                    <p class="text-white/90 text-base sm:text-lg font-bold px-4 mb-2">Sending emergency signal in...</p>
+                    <p class="text-white/70 text-sm px-4 font-medium">False alarm? Cancel below or skip if urgent</p>
                 </div>
 
                 <!-- Countdown Timer -->
@@ -106,14 +127,13 @@
                     </svg>
                     
                     <!-- Pulsing Circle with Countdown -->
-                    <div class="flex items-center justify-center w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-emergency-red/30 to-emergency-red/10 pulsing-glow backdrop-blur-sm border-4 border-emergency-red/50">
+                    <!-- Pulsing Circle with Countdown -->
+                    <div class="flex items-center justify-center w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-emergency-red/40 to-emergency-red/10 pulsing-glow backdrop-blur-xl border-4 border-emergency-red/60 shadow-[0_0_60px_rgba(230,57,70,0.5)]">
                         <div class="text-center">
-                            <span id="countdown" class="text-white text-6xl sm:text-7xl md:text-8xl font-black tracking-tighter">5</span>
-                            <p class="text-white/70 text-xs sm:text-sm font-bold uppercase tracking-widest mt-1">Seconds</p>
+                            <div id="countdown" class="text-7xl sm:text-8xl md:text-9xl font-black text-white mb-1 font-display drop-shadow-[0_0_30px_rgba(255,255,255,0.9)]">5</div>
+                            <div class="text-white/90 text-sm sm:text-base uppercase tracking-[0.2em] font-bold">seconds</div>
                         </div>
-                    </div>
-
-                    <!-- Rotating danger indicators -->
+                    </div>                    <!-- Rotating danger indicators -->
                     <div class="absolute inset-0 animate-spin" style="animation-duration: 3s;">
                         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-emergency-red rounded-full"></div>
                         <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-emergency-red rounded-full"></div>

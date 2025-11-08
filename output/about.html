@@ -5,9 +5,12 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>About Us - AmbuQuick</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700" rel="stylesheet"/>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -18,18 +21,29 @@
                         "emergency-red": "#E63946",
                         "success-green": "#2ECC71",
                         "neutral-gray": "#F5F5F5",
-                        "background-dark": "#121212",
+                        "background-dark": "#0A0E27",
                         "text-dark": "#1C1C1E",
-                        "text-gray": "#8A8A8E",
+                        "text-gray": "#6B7280",
+                        "accent-purple": "#8B5CF6",
+                        "accent-orange": "#F59E0B",
                     },
                     fontFamily: {
-                        "sans": ["Inter", "Poppins", "sans-serif"],
+                        "sans": ["Inter", "system-ui", "sans-serif"],
+                        "display": ["Poppins", "Inter", "sans-serif"],
+                        "mono": ["Space Grotesk", "monospace"],
                     },
                 },
             },
         }
     </script>
     <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: "liga" 1, "kern" 1;
+            text-rendering: optimizeLegibility;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -37,27 +51,36 @@
         .fade-in {
             animation: fadeIn 0.6s ease-out forwards;
         }
-        .stagger-1 { animation-delay: 0.1s; }
-        .stagger-2 { animation-delay: 0.2s; }
-        .stagger-3 { animation-delay: 0.3s; }
-        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+        
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .gradient-animate {
+            background-size: 200% 200%;
+            animation: gradient-shift 8s ease infinite;
+        }
     </style>
 </head>
 <body class="font-sans bg-gradient-to-br from-blue-50 via-white to-red-50 dark:bg-background-dark">
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-emergency-red text-3xl">emergency</span>
-                <span class="text-2xl font-black text-text-dark dark:text-white">AmbuQuick</span>
+    <header class="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b-2 border-gray-200/50 dark:border-gray-800/50 shadow-lg">
+        <div class="container mx-auto px-4 py-5 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <span class="material-symbols-outlined text-emergency-red text-4xl group-hover:scale-110 transition-transform">emergency</span>
+                <span class="text-2xl sm:text-3xl font-black text-text-dark dark:text-white font-display tracking-tight">AmbuQuick</span>
             </a>
-            <nav class="flex items-center gap-4">
-                <a href="index.html" class="text-text-dark dark:text-white hover:text-primary-blue transition-colors px-4 py-2 rounded-lg text-sm font-bold">
-                    <span class="material-symbols-outlined text-lg">home</span>
+            <nav class="flex items-center gap-3">
+                <a href="index.html" class="text-text-dark dark:text-white hover:text-primary-blue transition-all px-4 py-2 rounded-xl text-sm font-bold hover:bg-primary-blue/10">
+                    <span class="material-symbols-outlined text-xl">home</span>
                 </a>
-                <a href="login.html" class="inline-flex items-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-600 transition-all">
+                <a href="login.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-primary-blue to-accent-purple text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:shadow-lg transition-all hover:-translate-y-0.5">
                     <span class="material-symbols-outlined">person</span>
-                    Login
+                    <span class="hidden sm:inline">Login</span>
                 </a>
             </nav>
         </div>
@@ -67,16 +90,16 @@
     <main class="container mx-auto px-4 py-12 md:py-20">
         <!-- Hero Section -->
         <div class="text-center mb-16 fade-in opacity-0">
-            <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-blue/10 text-primary-blue rounded-full text-sm font-bold mb-6">
+            <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-blue/10 to-accent-purple/10 text-primary-blue rounded-full text-sm font-bold mb-6 border-2 border-primary-blue/20">
                 <span class="material-symbols-outlined">info</span>
-                About AmbuQuick
+                <span>About AmbuQuick</span>
             </div>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-text-dark dark:text-white mb-6">
-                <span class="bg-gradient-to-r from-primary-blue to-emergency-red bg-clip-text text-transparent">Saving Lives,</span><br/>
-                One Second at a Time
+            <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-text-dark dark:text-white mb-6 font-display tracking-tight leading-[0.95]">
+                <span class="bg-gradient-to-r from-primary-blue via-accent-purple to-emergency-red bg-clip-text text-transparent gradient-animate inline-block">Saving Lives,</span><br/>
+                <span class="text-text-dark dark:text-white">One Second at a Time</span>
             </h1>
-            <p class="text-lg md:text-xl text-text-gray dark:text-gray-400 max-w-3xl mx-auto">
-                AmbuQuick is India's first AI-powered ambulance aggregator platform, revolutionizing emergency healthcare with cutting-edge technology and compassionate service.
+            <p class="text-xl md:text-2xl text-text-gray dark:text-gray-400 max-w-3xl mx-auto leading-relaxed font-light">
+                AmbuQuick is India's <span class="font-bold text-text-dark dark:text-white">AI-powered ambulance aggregator platform</span>, providing rapid emergency medical response with advanced technology and professional care.
             </p>
         </div>
 
@@ -189,7 +212,7 @@
                     <div class="w-24 h-24 bg-gradient-to-br from-primary-blue to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">RT</div>
                     <h3 class="text-lg font-bold text-text-dark dark:text-white mb-1">Runtime Terrors</h3>
                     <p class="text-sm text-primary-blue font-semibold mb-2">Founding Team</p>
-                    <p class="text-xs text-text-gray dark:text-gray-400">Building the future of emergency healthcare</p>
+                    <p class="text-xs text-text-gray dark:text-gray-400">Building modern emergency healthcare</p>
                 </div>
                 <div class="bg-white dark:bg-gray-900 p-6 rounded-xl text-center">
                     <div class="w-24 h-24 bg-gradient-to-br from-success-green to-green-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">AI</div>
@@ -221,7 +244,7 @@
                     <span class="material-symbols-outlined">psychology</span>
                     Try AI Smart Booking
                 </a>
-                <a href="features_demo.html" class="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">
+                <a href="features.html" class="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">
                     <span class="material-symbols-outlined">auto_awesome</span>
                     Explore Features
                 </a>
@@ -240,7 +263,7 @@
             <div class="flex justify-center gap-6 text-sm text-gray-400">
                 <a href="index.html" class="hover:text-white transition-colors">Home</a>
                 <a href="about.html" class="hover:text-white transition-colors">About</a>
-                <a href="features_demo.html" class="hover:text-white transition-colors">Features</a>
+                <a href="features.html" class="hover:text-white transition-colors">Features</a>
                 <a href="smart_booking.html" class="hover:text-white transition-colors">Book Now</a>
             </div>
             <p class="text-gray-500 text-sm mt-8">© 2025 AmbuQuick. All rights reserved.</p>

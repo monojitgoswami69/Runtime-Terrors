@@ -33,20 +33,24 @@
 </head>
 <body class="font-sans bg-gradient-to-br from-blue-50 via-white to-red-50 dark:bg-background-dark min-h-screen">
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-emergency-red text-3xl">emergency</span>
-                <span class="text-2xl font-black text-text-dark dark:text-white">AmbuQuick</span>
+    <header class="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b-2 border-gray-200/50 dark:border-gray-800/50 shadow-lg">
+        <div class="container mx-auto px-4 py-5 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <span class="material-symbols-outlined text-emergency-red text-4xl group-hover:scale-110 transition-transform">emergency</span>
+                <span class="text-2xl sm:text-3xl font-black text-text-dark dark:text-white font-display tracking-tight">AmbuQuick</span>
             </a>
-            <nav class="flex items-center gap-4">
-                <a href="booking_history.html" class="hidden sm:inline-flex items-center gap-2 text-text-dark dark:text-white hover:text-primary-blue transition-colors px-4 py-2 rounded-lg text-sm font-bold">
+            <nav class="flex items-center gap-3">
+                <a href="index.html" class="text-text-dark dark:text-white hover:text-primary-blue transition-all px-4 py-2 rounded-xl text-sm font-bold hover:bg-primary-blue/10 flex items-center gap-2">
+                    <span class="material-symbols-outlined">home</span>
+                    <span class="hidden sm:inline">Home</span>
+                </a>
+                <a href="booking_history.html" class="hidden sm:inline-flex items-center gap-2 text-text-dark dark:text-white hover:text-primary-blue transition-all px-4 py-2 rounded-xl text-sm font-bold hover:bg-primary-blue/10">
                     <span class="material-symbols-outlined text-lg">history</span>
                     History
                 </a>
-                <button onclick="logout()" class="inline-flex items-center gap-2 bg-emergency-red/10 text-emergency-red hover:bg-emergency-red hover:text-white transition-all px-4 py-2 rounded-lg text-sm font-bold">
+                <button onclick="logout()" class="inline-flex items-center gap-2 bg-emergency-red/10 text-emergency-red hover:bg-emergency-red hover:text-white transition-all px-4 py-2 rounded-xl text-sm font-bold">
                     <span class="material-symbols-outlined">logout</span>
-                    Logout
+                    <span class="hidden sm:inline">Logout</span>
                 </button>
             </nav>
         </div>
@@ -106,7 +110,7 @@
                 </div>
                 <div class="text-sm font-bold text-text-dark dark:text-white">Medical QR</div>
             </button>
-            <a href="features_demo.html" class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all text-center group">
+            <a href="features.html" class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all text-center group">
                 <div class="w-14 h-14 bg-purple-500/10 rounded-full mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <span class="material-symbols-outlined text-purple-500 text-2xl">auto_awesome</span>
                 </div>
