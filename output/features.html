@@ -376,6 +376,10 @@
                     <a href="sos_activation.html" class="px-6 sm:px-8 py-3 sm:py-4 bg-emergency-red text-white rounded-xl font-black text-base sm:text-lg hover:bg-red-700 transition-all">
                         Emergency SOS
                     </a>
+                    <button onclick="openChatbot()" class="px-6 sm:px-8 py-3 sm:py-4 bg-success-green text-white rounded-xl font-black text-base sm:text-lg hover:bg-green-700 transition-all inline-flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">chat</span>
+                        Chat Support
+                    </button>
                 </div>
             </div>
 
@@ -405,5 +409,6 @@
             correctLevel: QRCode.CorrectLevel.H
         });
     </script>
+    <script src="chatbot_popup.js"></script>
 </body>
 </html>
